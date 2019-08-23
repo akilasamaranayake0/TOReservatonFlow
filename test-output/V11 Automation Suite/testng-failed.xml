@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" verbose="2" name="Failed suite [V11 Automation Suite]">
+  <test name="Web Reservation(failed)">
+    <parameter name="browser" value="firefox"/>
+    <parameter name="ProtalURL" value="http://web.elb.qa.gateway.use1.aws.rezos.io/rezproduction/admin/common/LoginPage.do"/>
+    <classes>
+      <class name="com.rezgateway.automation.TOReservatonFlow.HotelOnlyWebReservationRunner">
+        <methods>
+          <include name="quit"/>
+          <include name="setup"/>
+          <include name="runnerF" invocation-numbers="0"/>
+        </methods>
+      </class> <!-- com.rezgateway.automation.TOReservatonFlow.HotelOnlyWebReservationRunner -->
+    </classes>
+  </test> <!-- Web Reservation(failed) -->
+</suite> <!-- Failed suite [V11 Automation Suite] -->
