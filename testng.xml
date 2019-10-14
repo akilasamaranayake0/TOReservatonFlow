@@ -3,7 +3,7 @@
 <suite name="V11 Automation Suite" verbose="2">
 	<test name="Web Reservation">
 		
-		<parameter name="browser" value="firefox" />
+		<parameter name="browser" value="chrome" />
 		<parameter name="ProtalURL"	value="http://web.elb.qa.gateway.use1.aws.rezos.io/rezproduction/admin/common/LoginPage.do" />
 		
 		<classes>
