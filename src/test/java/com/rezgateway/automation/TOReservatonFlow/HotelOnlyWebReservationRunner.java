@@ -31,8 +31,8 @@ public class HotelOnlyWebReservationRunner extends UIBaseTest {
 	public String driverPathChrome = "./../TOReservatonFlow/Resources/chromedriver.exe";
 	public String driverPathFirfox = "./../TOReservatonFlow/Resources/geckodriver.exe";
 
-	public String UN = "RezG_QA_B2B";
-	public String PW = "Spence@123";
+	public String UN = "Autob2b";
+	public String PW = "654321";
 	public String reservationType = "H";
 	public String city = "Colombo";
 	public String Destination = ", Sri Lanka";
@@ -293,11 +293,11 @@ public class HotelOnlyWebReservationRunner extends UIBaseTest {
 			// Set Check-out Date
 			
 			this.button_check_out_date.click();
-			wait.until(ExpectedConditions.visibilityOfAllElements(this.element_bec_hotelonly_calender));
-
+		
 			String COUT = selectDateFromTheCalendar(CheckOutDate, this.element_calender_current_displaying_year, this.element_calender_current_displaying_month, this.button_calender_next, this.elements_dates_from_calendar);
-			System.out.println("<<<<<<< ChkOUT_" + COUT + " <<<<<<<<");
-
+			
+			System.out.println("<<<<<<< COUT" + COUT + " <<<<<<<<");
+			
 			// Set Room Count
 
 			this.drop_down_room_count.click();
@@ -309,11 +309,10 @@ public class HotelOnlyWebReservationRunner extends UIBaseTest {
 			// Set the Occupancy
 			this.button_select_occupancy.click();
 
-			driverwait.until(ExpectedConditions.visibilityOfAllElements(this.element_select_occupancy_pane));
 			this.element_select_occupancy_pane.click();
 
-			int index = 0;
-			int rcount = 1;
+			int index 		=  0;
+			int rcount  	=  1;
 
 			// "{1,0,[]};{1,2,[5,2]};{1,1,[5]}";
 
@@ -547,7 +546,7 @@ public class HotelOnlyWebReservationRunner extends UIBaseTest {
 				Day = date.getText();
 				System.out.println("Day >> " + Day + ">>>>>>> "+ Date.split("-")[0] +" Expected Date");
 				date.click();
-				
+				break;
 			}
 		}
 
