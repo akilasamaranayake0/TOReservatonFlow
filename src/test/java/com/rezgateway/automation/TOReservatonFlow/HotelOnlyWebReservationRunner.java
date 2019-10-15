@@ -5,10 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
@@ -28,15 +25,14 @@ import com.rezgateway.automation.core.UIBaseTest;
 
 public class HotelOnlyWebReservationRunner extends UIBaseTest {
 
-	public WebDriver driver;
-	private static Logger logger = null;
+	private static Logger logger ;
 	private static WebDriverWait driverwait;
 
-	public String driverPathChrome = "Resourses/chromedriver.exe";
-	public String driverPathFirfox = "Resourses/geckodriver.exe";
+	public String driverPathChrome = "./../TOReservatonFlow/Resources/chromedriver.exe";
+	public String driverPathFirfox = "./../TOReservatonFlow/Resources/geckodriver.exe";
 
-	public String UN = "AkilaB2B";
-	public String PW = "123456";
+	public String UN = "RezG_QA_B2B";
+	public String PW = "Spence@123";
 	public String reservationType = "H";
 	public String city = "Colombo";
 	public String Destination = ", Sri Lanka";
@@ -47,8 +43,8 @@ public class HotelOnlyWebReservationRunner extends UIBaseTest {
 	public String[] HotelName = { "Test Supplement Hotel" };
 	public String HotelSearchType = "Y";
 
-	public String CheckInDate = "01-April-2020";
-	public String CheckOutDate = "05-April-2020";
+	public String CheckInDate = "1-April-2020";
+	public String CheckOutDate = "5-April-2020";
 
 	// Bandaranaike International Airport(CMB),
 
@@ -88,8 +84,11 @@ public class HotelOnlyWebReservationRunner extends UIBaseTest {
 	@FindBy(id = "ho_arrival_temp")
 	private WebElement button_check_out_date;
 
-	@FindBy(id = "ui-datepicker-div")
+	@FindBy(xpath = "//*[@id='ui-datepicker-div']")
 	private WebElement element_bec_hotelonly_calender;
+	
+	@FindBys({ @FindBy(xpath = "//*[@id='ui-datepicker-div']/table/tbody/tr/td/a") })
+	private List<WebElement> elements_dates_from_calendar;
 
 	@FindBy(xpath = "//*[@id='ui-datepicker-div']/div/a[2]")
 	private WebElement button_calender_next;
@@ -142,33 +141,15 @@ public class HotelOnlyWebReservationRunner extends UIBaseTest {
 	public HotelOnlyWebReservationRunner() {
 
 		logger = Logger.getLogger(HotelOnlyWebReservationRunner.class);
+		
 	}
 
-	@Parameters("browser")
 	@BeforeClass
-	public void setup(String browser) {
+	public void setup() {
 
 		try {
-
-			if (browser.equalsIgnoreCase("chrome")) {
-
-				System.setProperty("webdriver.chrome.driver", driverPathChrome);
-				driver = new ChromeDriver();
-				PageFactory.initElements(driver, this);
-				driverwait = new WebDriverWait(driver, 6);
-				driver.manage().window().maximize();
-
-			} else if (browser.equalsIgnoreCase("firefox")) {
-
-				System.setProperty("webdriver.gecko.driver", driverPathFirfox);
-				driver = new FirefoxDriver();
-				PageFactory.initElements(driver, this);
-				driverwait = new WebDriverWait(driver, 6);
-				driver.manage().window().maximize();
-
-			} else {
-				// TODO
-			}
+			
+			PageFactory.initElements(driver, this);
 
 		} catch (Exception e) {
 			Assert.fail(e.toString());
@@ -188,7 +169,6 @@ public class HotelOnlyWebReservationRunner extends UIBaseTest {
 		/******************************************************************/
 
 		try {
-			driver.get(ProtalURL);
 			this.input_field_user_name.sendKeys(UN);
 			this.input_field_password.sendKeys(PW);
 			this.button_login.submit();
@@ -277,6 +257,7 @@ public class HotelOnlyWebReservationRunner extends UIBaseTest {
 
 				result.setAttribute("Actual", "City List Is Suggested from the Hotel Only Bec ");
 				takeScreenshot("City List Is Suggested from the Hotel Only Bec");
+			
 			} else {
 				result.setAttribute("Actual", "City List Is Empty");
 				Assert.fail("City List Is Empty");
@@ -306,15 +287,16 @@ public class HotelOnlyWebReservationRunner extends UIBaseTest {
 			WebDriverWait wait = new WebDriverWait(driver, 7);
 			wait.until(ExpectedConditions.visibilityOfAllElements(this.element_bec_hotelonly_calender));
 
-			CheckInDate = selectDateFromTheCalendar(CheckInDate, this.element_calender_current_displaying_year, this.element_calender_current_displaying_month, this.button_calender_next, this.element_bec_hotelonly_calender);
-			logger.debug("<<<<<<< ChkOUT_" + CheckInDate + " <<<<<<<<");
-
+			String CIN = selectDateFromTheCalendar(CheckInDate, this.element_calender_current_displaying_year, this.element_calender_current_displaying_month, this.button_calender_next, this.elements_dates_from_calendar);
+			System.out.println("<<<<<<< ChkIN_" + CIN + " <<<<<<<<");
+			
 			// Set Check-out Date
+			
 			this.button_check_out_date.click();
 			wait.until(ExpectedConditions.visibilityOfAllElements(this.element_bec_hotelonly_calender));
 
-			CheckOutDate = selectDateFromTheCalendar(CheckOutDate, this.element_calender_current_displaying_year, this.element_calender_current_displaying_month, this.button_calender_next, this.element_bec_hotelonly_calender);
-			logger.debug("<<<<<<< ChkOUT_" + CheckOutDate + " <<<<<<<<");
+			String COUT = selectDateFromTheCalendar(CheckOutDate, this.element_calender_current_displaying_year, this.element_calender_current_displaying_month, this.button_calender_next, this.elements_dates_from_calendar);
+			System.out.println("<<<<<<< ChkOUT_" + COUT + " <<<<<<<<");
 
 			// Set Room Count
 
@@ -526,7 +508,7 @@ public class HotelOnlyWebReservationRunner extends UIBaseTest {
 
 	}
 
-	public static String selectDateFromTheCalendar(String Date, WebElement yearEle, WebElement month, WebElement nextButtonEle, WebElement eleCalendar) {
+	public static String selectDateFromTheCalendar(String Date, WebElement yearEle, WebElement month, WebElement nextButtonEle, List<WebElement> eleCalendar) throws Exception {
 		// Date Format Is 14-April-2020
 
 		String Month = month.getText();
@@ -557,17 +539,22 @@ public class HotelOnlyWebReservationRunner extends UIBaseTest {
 			}
 		}
 
-		for (WebElement date : eleCalendar.findElements(By.xpath("table/tbody/tr/td/a"))) {
+		System.out.println(eleCalendar.size()+" >>>>>>>>>>> Day >> " + Day + ">>>>>>> "+ Date.split("-")[0] +" Expected Date");
+		
+		for (WebElement date :eleCalendar) {
+			
 			if (date.getText().equalsIgnoreCase(Date.split("-")[0])) {
-				date.click();
 				Day = date.getText();
+				System.out.println("Day >> " + Day + ">>>>>>> "+ Date.split("-")[0] +" Expected Date");
+				date.click();
+				
 			}
 		}
 
 		return Day;
 	}
 
-	private static String numberToWord(int number) {
+	private static String numberToWord(int number) throws Exception {
 		// variable to hold string representation of number
 		String words = "";
 		String unitsArray[] = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };
